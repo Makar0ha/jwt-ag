@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class JWTUtil {
 
     @Value("${app.secret.key}")
-    private String secret_key;
+    private String secretKey;
 
     // code to generate Token
     public String generateToken(String subject) {
@@ -27,13 +27,13 @@ public class JWTUtil {
                 .setAudience("XYZ_Ltd")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)))
-                .signWith(SignatureAlgorithm.HS512, Base64.getEncoder().encode(secret_key.getBytes()))
+                .signWith(SignatureAlgorithm.HS512, Base64.getEncoder().encode(secretKey.getBytes()))
                 .compact();
     }
 
     public Claims getClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(Base64.getEncoder().encode(secret_key.getBytes()))
+                .setSigningKey(Base64.getEncoder().encode(secretKey.getBytes()))
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -63,5 +63,4 @@ public class JWTUtil {
     public String getSubject(String token) {
         return getClaims(token).getSubject();
     }
-
 }
